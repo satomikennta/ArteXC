@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ".:/api"
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - testrpc
+
+  testrpc:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    command: >
+      --mnemonic="stick solution okay arrow ancient depend balcony fork sun baby moral trend"
