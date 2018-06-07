@@ -28,6 +28,21 @@ contract AXCCrowdsale is CappedCrowdsale, MintedCrowdsale, TimedCrowdsale, Refun
         require(_goal <= _cap);
     }
 
+    // Mint AXCtoken for Team and Reservation.
+    // This function should be triggered by owner after closingTime.
+    // Amount of totalAXC depends on totalSupply at Crowdsale.
+    // Mint 15% of totalAXC for Team.
+    // Mint 50% of totalAXC for Reservation.
+    function MintForAlloc(address team, address reserve) onlyOwner() public {
+        require(hasClosed());
+        require(allocFinished == false);
+        uint256 totalAXC = token.totalSupply().mul(100).div(35);
+        uint256 amountForTeam = totalAXC.mul(15).div(100);
+        uint256 amountForReserve = totalAXC.div(2);
+        AXCToken(token).mint(team, amountForTeam);
+        AXCToken(token).mint(reserve, amountForReserve);
+        allocFinished = true;
+    }
 
     //override _getTokenAmount() in zeppelin-solidity in order to change purchase_rate at every stage.
     //initial rate is 12000.
@@ -46,22 +61,5 @@ contract AXCCrowdsale is CappedCrowdsale, MintedCrowdsale, TimedCrowdsale, Refun
             rate = 10000;
         }
         return _weiAmount.mul(rate);
-    }
-
-
-    // Mint AXCtoken for Team and Reservation.
-    // This function should be triggered by owner after closingTime.
-    // Amount of totalAXC depends on totalSupply at Crowdsale.
-    // Mint 15% of totalAXC for Team.
-    // Mint 50% of totalAXC for Reservation.
-    function MintForAlloc(address team, address reserve) onlyOwner() public {
-        require(hasClosed());
-        require(allocFinished == false);
-        uint256 totalAXC = token.totalSupply().mul(100).div(35);
-        uint256 amountForTeam = totalAXC.mul(15).div(100);
-        uint256 amountForReserve = totalAXC.div(2);
-        AXCToken(token).mint(team, amountForTeam);
-        AXCToken(token).mint(reserve, amountForReserve);
-        allocFinished = true;
     }
 }
