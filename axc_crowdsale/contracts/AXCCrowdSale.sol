@@ -33,7 +33,7 @@ contract AXCCrowdsale is CappedCrowdsale, MintedCrowdsale, TimedCrowdsale, Refun
     // Amount of totalAXC depends on totalSupply at Crowdsale.
     // Mint 15% of totalAXC for Team.
     // Mint 50% of totalAXC for Reservation.
-    function MintForAlloc(address team, address reserve) onlyOwner() public {
+    function MintForAlloc(address team, address reserve) public onlyOwner() {
         require(hasClosed());
         require(allocFinished == false);
         uint256 totalAXC = token.totalSupply().mul(100).div(35);
